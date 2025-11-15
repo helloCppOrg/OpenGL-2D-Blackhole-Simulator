@@ -29,6 +29,10 @@ namespace Visual {
     constexpr float VIEW_WIDTH{100000000000.0f};   // 100 Gm
     constexpr float VIEW_HEIGHT{75000000000.0f};   // 75 Gm
 
+    // Point source position
+    constexpr float POINT_SOURCE_X{-0.95f * VIEW_WIDTH};
+    constexpr float POINT_SOURCE_Y{0.85f * VIEW_HEIGHT};
+
     // Ray timing (frames)
     constexpr int ORBITING_START{0};
     constexpr int POINT_SOURCE_START{700};

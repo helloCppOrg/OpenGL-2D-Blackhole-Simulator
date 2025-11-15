@@ -15,8 +15,8 @@ struct Ray {
     // Schwarzschild coordinates
     double r;      // Radial coordinate
     double phi;    // Angular coordinate
-    double dr;     // dr/dλ (radial velocity)
-    double dphi;   // dφ/dλ (angular velocity)
+    double v_r;    // Radial velocity (dr/dλ)
+    double v_phi;  // Angular velocity (dφ/dλ)
 
     // Conserved quantities
     double E;      // Energy per unit mass
@@ -24,7 +24,7 @@ struct Ray {
 
     // Visualization data
     std::vector<glm::vec2> trail;
-    double initialPhi;
+    double initialVelocityAngle;
     double deflection;
 
     // Scenario tracking
@@ -33,14 +33,20 @@ struct Ray {
 
     // Constructor: Initialize ray from Cartesian position and velocity
     Ray(double x, double y, double vx, double vy,
-        RayScenario scen = RayScenario::PARALLEL,
-        int start = 0);
+        RayScenario scenario = RayScenario::PARALLEL,
+        int startFrame = 0);
 
     // Check if ray has been captured by black hole
     bool isCaptured() const;
 
     // Check if ray has escaped to infinity
     bool hasEscaped(double maxDistance) const;
+
+    // Record current position to trail
+    void recordPosition();
+
+    // Integrate ray forward one step (checks if active, captured, or escaped)
+    void integrate(double dlambda, double maxDistance, int currentFrame);
 
     // Update deflection angle (for color coding)
     void updateDeflection();

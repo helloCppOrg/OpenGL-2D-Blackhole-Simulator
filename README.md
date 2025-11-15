@@ -1,5 +1,9 @@
 # OpenGL 2D Black Hole Simulator
 
+## Step by step version of this project can be found at:
+
+https://www.hellocpp.dev/projects/opengl-blackhole-2d
+
 This project creates a 2D black hole gravitational lensing simulation using OpenGL and the Schwarzschild metric. You'll visualize how light rays bend around a massive black hole using numerical integration.
 
 ## Quick Start (Recommended)
@@ -18,11 +22,11 @@ build.bat
 ```
 
 **The scripts will:**
-- ✓ Check for CMake and C++ compiler
-- ✓ Automatically use vcpkg if `VCPKG_ROOT` is set
-- ✓ Fall back to system libraries otherwise
-- ✓ Build and run your project
-- ✓ Provide helpful error messages if dependencies are missing
+- Check for CMake and C++ compiler
+- Automatically use vcpkg if `VCPKG_ROOT` is set
+- Fall back to system libraries otherwise
+- Build and run your project
+- Provide helpful error messages if dependencies are missing
 
 **If the script fails**, follow the manual installation instructions below to install dependencies, then run the script again.
 
@@ -45,94 +49,111 @@ build.bat
 
 If you prefer manual control or the automated scripts fail, follow these detailed instructions.
 
-### 1. Install Dependencies with Vcpkg (Recommended)
+## Method 1: Using Vcpkg (Recommended for Windows)
 
-If you already have vcpkg installed:
-```bash
-vcpkg install glew glfw3 glm
-export VCPKG_ROOT=/path/to/vcpkg  # Set this environment variable
-./run.sh                           # Then use the automated script
-```
+**Step 1: Install vcpkg** (if you don't have it)
 
-If you don't have vcpkg yet:
 ```bash
 # Clone vcpkg
 git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 
-# Bootstrap (Windows)
-.\bootstrap-vcpkg.bat
+# Bootstrap vcpkg
+.\bootstrap-vcpkg.bat              # Windows
+./bootstrap-vcpkg.sh               # Linux/macOS
+```
 
-# Bootstrap (macOS/Linux)
-./bootstrap-vcpkg.sh
+**Step 2: Navigate to your project directory**
 
-# Install dependencies
-./vcpkg install glew glfw3 glm
-
-# Set environment variable for automated script
-export VCPKG_ROOT=$(pwd)           # Linux/macOS
-set VCPKG_ROOT=%CD%                 # Windows
-
-# Return to your project and run the script
+```bash
 cd /path/to/your/project
-./run.sh                            # Linux/macOS
-build.bat                           # Windows
 ```
 
-**The automated scripts will automatically detect and use vcpkg if `VCPKG_ROOT` is set!**
+**Step 3: Install dependencies using vcpkg.json**
 
-If you cannot get vcpkg working, jump to the platform-specific alternatives below.
-
-## Alternative: Debian/Ubuntu (apt)
-
-Install system packages and use the automated script:
+This project includes a `vcpkg.json` file that automatically specifies all dependencies.
 
 ```bash
-sudo apt update
-sudo apt install build-essential cmake \
-    libglew-dev libglfw3-dev libglm-dev libgl1-mesa-dev
-
-# Run the automated script (no VCPKG_ROOT needed)
-./run.sh
+vcpkg install
 ```
 
-Or build manually:
+This will install: GLEW, GLFW3, and GLM.
+
+**Step 4: Get the vcpkg CMake toolchain file path**
+
 ```bash
-cmake -B build -S .
+vcpkg integrate install
+```
+
+This outputs something like:
+```
+CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake"
+```
+
+Copy the path shown in your output (you'll need it in the next step).
+
+**Step 5: Configure the project with CMake**
+
+Replace `/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake` with the actual path from Step 4:
+
+```bash
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake
+```
+
+**Windows example:**
+```cmd
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+```
+
+**Step 6: Build the project**
+
+```bash
 cmake --build build
-./build/[executable-name]
 ```
 
-## Alternative: macOS (Homebrew)
+**Step 7: Run the program**
 
-Install dependencies via [Homebrew](https://brew.sh/) and use the automated script:
+The executable will be in the `build` folder:
+
+```bash
+./build/blackhole                  # Linux/macOS
+build\Debug\blackhole.exe          # Windows (Debug)
+build\Release\blackhole.exe        # Windows (Release)
+```
+
+---
+
+## Method 2: macOS (Homebrew)
+
+Install dependencies via [Homebrew](https://brew.sh/):
 
 ```bash
 # Install dependencies
 brew install cmake glew glfw glm
 
-# Run the automated script
-./run.sh
-```
-
-Or build manually:
-```bash
+# Build the project
 cmake -B build -S .
 cmake --build build
-./build/[executable-name]
+
+# Run the program
+./build/blackhole
 ```
 
-## Alternative: Windows Manual Build
+## Method 3: Debian/Ubuntu (System Packages)
 
-If the `build.bat` script doesn't work, you can build manually:
+Install dependencies via apt:
 
-```cmd
-REM From your project directory
-mkdir build
-cd build
-cmake ..
-cmake --build . --config Release
-Release\[executable-name].exe
+```bash
+# Install dependencies
+sudo apt update
+sudo apt install build-essential cmake libglew-dev libglfw3-dev libglm-dev libgl1-mesa-dev
+
+# Build the project
+cmake -B build -S .
+cmake --build build
+
+# Run the program
+./build/blackhole
 ```
 
 ## What You'll Build
@@ -163,7 +184,7 @@ If you encounter compilation errors:
 
 Found a bug or have suggestions? Please report issues on GitHub:
 
-**https://github.com/helloC-Org/OpenGL-2D-Blackhole-Simulator/issues**
+**https://github.com/helloCppOrg/OpenGL-2D-Blackhole-Simulator/issues**
 
 When reporting issues, please include:
 - Your operating system and version
